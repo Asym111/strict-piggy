@@ -90,6 +90,7 @@ h3 { font-size: 15px; color: var(--muted); text-transform: uppercase; letter-spa
 #screen-signin { justify-content: center; }
 .signin-box { display: flex; flex-direction: column; gap: 16px; text-align: center; align-items: center; }
 .signin-box .input { text-align: center; }
+.signin-divider { margin-top: 8px; }
 
 /* ===== Поля ===== */
 .input {

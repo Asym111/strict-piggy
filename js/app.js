@@ -10,6 +10,7 @@ const REVOKE_RATE = 0.50;    // потеря 50% при отзыве согла�
 
 const defaultState = () => ({
   email: null,
+  uid: null,
   consent: null,            // { date, ip, rulesVersion }
   goal: null,               // { name, target, days, daily, createdDay }
   balance: 0,
@@ -33,6 +34,7 @@ function load() {
 
 function save() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  cloudSave();
 }
 
 /* ---------- Работа с датами ---------- */
@@ -66,6 +68,65 @@ function fmtMoney(n) {
 
 function fmtDay(key) {
   return parseDay(key).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+/* ---------- Firebase (Auth + Firestore) ---------- */
+
+let fbAuth = null;
+let fbDb = null;
+let fbUser = null;
+let cloudSaveTimer = null;
+
+function initFirebase() {
+  if (!window.firebase || !window.FIREBASE_CONFIG) return;
+  try {
+    firebase.initializeApp(window.FIREBASE_CONFIG);
+    fbAuth = firebase.auth();
+    fbDb = firebase.firestore();
+    fbAuth.onAuthStateChanged(async (user) => {
+      fbUser = user;
+      if (!user) return;
+      try {
+        const snap = await fbDb.collection('users').doc(user.uid).get();
+        if (snap.exists && snap.data().state) {
+          // облако — источник истины
+          state = { ...defaultState(), ...snap.data().state };
+        }
+        state.email = user.email;
+        state.uid = user.uid;
+        save();
+        route();
+      } catch (e) {
+        console.warn('Firestore load failed', e);
+      }
+    });
+  } catch (e) {
+    console.warn('Firebase init failed', e);
+  }
+}
+
+function cloudSave() {
+  if (!fbDb || !fbUser) return;
+  clearTimeout(cloudSaveTimer);
+  cloudSaveTimer = setTimeout(() => {
+    fbDb.collection('users').doc(fbUser.uid).set({
+      state,
+      email: fbUser.email,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    }).catch((e) => console.warn('Firestore save failed', e));
+  }, 800);
+}
+
+async function firebaseSignOutAndDelete(deleteData) {
+  if (!fbAuth || !fbUser) return;
+  try {
+    if (deleteData && fbDb) await fbDb.collection('users').doc(fbUser.uid).delete();
+    if (deleteData) await fbUser.delete().catch(() => fbAuth.signOut());
+    else await fbAuth.signOut();
+  } catch (e) {
+    console.warn('Firebase sign-out failed', e);
+  }
+  fbUser = null;
 }
 
 /* ---------- Тексты уведомлений ---------- */
@@ -437,17 +498,36 @@ $('btn-onboarding-skip').addEventListener('click', () => showScreen('signin'));
 
 /* ---------- Вход ---------- */
 
-$('btn-google-signin').addEventListener('click', () => {
+function demoSignIn() {
   const email = $('input-email').value.trim();
   if (!email || !email.includes('@')) {
-    toast('Введите корректный email', true);
+    toast('Введите корректный email для демо-режима', true);
     return;
   }
   state.email = email;
   save();
-  toast('Вход выполнен: ' + email);
+  toast('Демо-вход выполнен: ' + email);
   showScreen('consent');
+}
+
+$('btn-google-signin').addEventListener('click', async () => {
+  if (!fbAuth) {
+    toast('Firebase недоступен — используйте демо-режим', true);
+    return;
+  }
+  try {
+    const result = await fbAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    toast('Вход выполнен: ' + result.user.email);
+    // дальнейший роутинг сделает onAuthStateChanged после загрузки облачных данных
+  } catch (e) {
+    if (e && e.code !== 'auth/popup-closed-by-user' && e.code !== 'auth/cancelled-popup-request') {
+      console.warn('Google sign-in failed', e);
+      toast('Не удалось войти через Google: ' + (e.code || e.message), true);
+    }
+  }
 });
+
+$('btn-demo-signin').addEventListener('click', demoSignIn);
 
 /* ---------- Согласие ---------- */
 
@@ -480,8 +560,9 @@ $('btn-code-confirm').addEventListener('click', () => {
 });
 
 $('btn-consent-decline').addEventListener('click', () => {
+  firebaseSignOutAndDelete(false);
   state = defaultState();
-  save();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   toast('Правильное решение, если не уверен в себе.');
   setSlide(0);
   showScreen('onboarding');
@@ -619,9 +700,11 @@ $('btn-withdraw').addEventListener('click', () => {
 
 $('btn-success-ok').addEventListener('click', () => {
   const email = state.email;
+  const uid = state.uid;
   const consent = state.consent;
   state = defaultState();
   state.email = email;
+  state.uid = uid;
   state.consent = consent;
   save();
   showModal('modal-success', false);
@@ -647,8 +730,9 @@ $('btn-revoke-cancel').addEventListener('click', () => showModal('modal-revoke',
 $('btn-revoke-confirm').addEventListener('click', () => {
   const payout = state.balance * (1 - REVOKE_RATE);
   showModal('modal-revoke', false);
+  firebaseSignOutAndDelete(true);
   state = defaultState();
-  save();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   $('success-title').textContent = 'Аккаунт удалён';
   $('success-message').textContent = 'Согласие отозвано. Выплачено ' + fmtMoney(payout) + ' (50% удержано по правилам).';
   showModal('modal-success');
@@ -681,7 +765,7 @@ $('btn-simulate-day').addEventListener('click', () => {
 
 /* ---------- Старт ---------- */
 
-(function init() {
+function route() {
   if (state.goal && state.consent) {
     openTab('dashboard');
   } else if (state.consent && state.email) {
@@ -691,4 +775,7 @@ $('btn-simulate-day').addEventListener('click', () => {
   } else {
     showScreen('onboarding');
   }
-})();
+}
+
+initFirebase();
+route();
