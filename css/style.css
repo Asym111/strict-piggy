@@ -226,6 +226,46 @@ h3 { font-size: 15px; color: var(--muted); text-transform: uppercase; letter-spa
 }
 .stat-value { font-size: 20px; font-weight: 800; }
 
+/* ===== Сетка сумм ===== */
+.grid-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.grid-head { display: flex; justify-content: space-between; align-items: center; }
+.grid-cells {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+.cell {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 10px 2px;
+  text-align: center;
+  cursor: pointer;
+  transition: all .12s;
+}
+.cell:not(.done):hover { border-color: var(--accent); }
+.cell.selected { border-color: var(--accent); background: rgba(52, 199, 89, .15); color: var(--accent); }
+.cell.done {
+  background: rgba(52, 199, 89, .08);
+  border-color: rgba(52, 199, 89, .3);
+  color: var(--muted);
+  text-decoration: line-through;
+  cursor: default;
+}
+
 .deposit-block { display: flex; flex-direction: column; gap: 10px; }
 .deposit-input-row { display: flex; gap: 10px; align-items: stretch; }
 .deposit-input-row .input { flex: 1; }

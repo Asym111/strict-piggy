@@ -98,6 +98,14 @@
       <span>Срок, дней</span>
       <input type="number" id="input-goal-days" class="input" placeholder="90" min="7" max="730">
     </label>
+    <label class="field">
+      <span>Режим накопления</span>
+      <div class="notif-style-picker">
+        <button class="pay-mode active" data-mode="linear">📏 Линейно</button>
+        <button class="pay-mode" data-mode="grid">🎲 Сетка сумм</button>
+      </div>
+      <span class="tiny muted" id="mode-hint">Одинаковый взнос каждый день</span>
+    </label>
     <div id="goal-daily-preview" class="goal-preview hidden">
       Ежедневный взнос: <b id="goal-daily-amount">—</b>
     </div>
@@ -148,9 +156,18 @@
       </div>
     </div>
 
+    <div id="grid-block" class="grid-card hidden">
+      <div class="grid-head">
+        <b>🎲 Сетка сумм</b>
+        <span class="tiny muted" id="grid-progress"></span>
+      </div>
+      <div class="grid-cells" id="grid-cells"></div>
+      <button id="btn-grid-random" class="btn btn-small btn-ghost">🎲 Выбрать случайную ячейку</button>
+    </div>
+
     <div class="deposit-block">
       <div id="deposit-countdown" class="countdown"></div>
-      <div class="deposit-input-row">
+      <div class="deposit-input-row" id="deposit-input-row">
         <input type="number" id="input-deposit" class="input" placeholder="Сумма" min="1">
         <button id="btn-deposit-daily" class="btn btn-small btn-ghost" title="Подставить дневной взнос">дневной</button>
       </div>

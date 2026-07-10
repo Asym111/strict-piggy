@@ -76,24 +76,67 @@ const NOTIF = {
       'Ладно, сегодня выжил. Завтра посмотрим, на что ты способен.',
       'Взнос принят. Не расслабляйся — полночь всегда рядом.',
       'Молодец, что не слился. Пока что.',
+      'О, ты ещё в игре? Деньги принял. Свободен до завтра.',
+      'Неплохо. Но один пропуск — и я заберу 10%. Помни об этом.',
+      'Копишь? Правильно. Нищета не ждёт слабых решений.',
+      'Сегодня зачёт. Но я слежу за тобой каждый день.',
     ],
-    penalty: (amount) =>
-      `Слабак. Ты пропустил день — штраф ${fmtMoney(amount)} уже улетел владельцу приложения. Поздравляю с потерей.`,
-    reminder: 'Ты опять тянешь? Пропустишь день — 10% твоих денег испарятся. Ты серьёзно хочешь остаться нищим?',
-    progress: (pct) => `Всего ${pct}%. Копишь как черепаха. Шевелись.`,
+    penalty: [
+      (a) => `Слабак. Ты пропустил день — штраф ${a} уже улетел владельцу приложения. Поздравляю с потерей.`,
+      (a) => `Ты опять пропустил? ${a} твоих денег уже улетели владельцу. Ты серьёзно хочешь остаться нищим?`,
+      (a) => `Минус ${a}. Дисциплина — не твоё? Тогда и деньги не твои.`,
+      (a) => `${a} испарились. Владелец приложения передаёт спасибо. Может, хватит сливаться?`,
+    ],
+    reminder: [
+      'Ты опять тянешь? Пропустишь день — 10% твоих денег испарятся. Ты серьёзно хочешь остаться нищим?',
+      'Часики тикают. Полночь заберёт 10%, если не пополнишь. Решай.',
+      'Не вижу взноса. Хочешь подарить владельцу ещё 10%? Смелый ход.',
+      'Опять откладываешь? Штраф не откладывает. Никогда.',
+    ],
+    progress: [
+      (pct) => `Всего ${pct}%. Копишь как черепаха. Шевелись.`,
+      (pct) => `${pct}%? И это всё, на что ты способен?`,
+      (pct) => `${pct}%. До цели далеко, а до штрафа — одна ночь.`,
+    ],
   },
   soft: {
     deposit: [
       'Ещё один день — и ты на шаг ближе. Горжусь тобой! 💚',
       'Отличная работа! Дисциплина — твоя суперсила 🔥',
       'Взнос сделан! Ты строишь своё будущее по кирпичику 🧱',
+      'Есть! Сегодняшний шаг сделан — мечта стала ближе ✨',
+      'Ты умница! Серия продолжается, так держать 🌟',
+      'Каждый взнос — это подарок будущему себе. Красавчик! 💪',
+      'День засчитан! Маленькие шаги создают большие результаты 🚀',
     ],
-    penalty: (amount) =>
-      `К сожалению, день был пропущен — списан штраф ${fmtMoney(amount)}. Не сдавайся, начни новую серию сегодня! 🌱`,
-    reminder: 'Не забудь про сегодняшний взнос! Ты слишком близко к мечте, чтобы терять деньги 💫',
-    progress: (pct) => `Ты на ${pct}% ближе к мечте! Сегодняшний взнос — и ты герой 🔥`,
+    penalty: [
+      (a) => `К сожалению, день был пропущен — списан штраф ${a}. Не сдавайся, начни новую серию сегодня! 🌱`,
+      (a) => `Штраф ${a} 😔 Бывает. Главное — вернуться в строй прямо сейчас!`,
+      (a) => `Потеря ${a} — это урок, а не приговор. Новая серия начинается с сегодняшнего взноса 💫`,
+    ],
+    reminder: [
+      'Не забудь про сегодняшний взнос! Ты слишком близко к мечте, чтобы терять деньги 💫',
+      'Сегодняшний взнос — и ты герой 🔥 Не дай штрафу ни единого шанса!',
+      'Твоя мечта ждёт! Один маленький взнос — и день засчитан 🌤',
+      'Ты справлялся раньше — справишься и сегодня. Пополни копилку! 💚',
+    ],
+    progress: [
+      (pct) => `Ты на ${pct}% ближе к мечте! Сегодняшний взнос — и ты герой 🔥`,
+      (pct) => `Уже ${pct}%! Ты делаешь это лучше, чем большинство 🚀`,
+      (pct) => `${pct}% пройдено. Каждый день — кирпичик твоего будущего 🧱`,
+    ],
   },
 };
+
+function pick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// стабильный выбор на день (чтобы баннер не менялся при каждом рендере)
+function pickDaily(arr) {
+  const seed = parseDay(dayKey(appToday())).getTime() / 86400000;
+  return arr[Math.floor(seed) % arr.length];
+}
 
 /* ---------- Утилиты DOM ---------- */
 
@@ -116,6 +159,29 @@ function toast(text, harsh = false, ms = 4200) {
   el.textContent = text;
   $('toast-container').appendChild(el);
   setTimeout(() => el.remove(), ms);
+}
+
+/* ---------- Сетка сумм (челлендж) ---------- */
+
+// Генерирует массив из `days` разных сумм, кратных 100, с точной суммой `target`
+function generateGrid(target, days) {
+  const weights = Array.from({ length: days }, () => 0.3 + Math.random() * 1.9);
+  const sumW = weights.reduce((a, b) => a + b, 0);
+  const amounts = weights.map((w) => Math.max(100, Math.round((w * target) / sumW / 100) * 100));
+  let diff = target - amounts.reduce((a, b) => a + b, 0);
+  let i = 0;
+  while (diff !== 0 && i < days * 200) {
+    const idx = i % days;
+    if (Math.abs(diff) < 100) { amounts[idx] += diff; diff = 0; break; }
+    const step = diff > 0 ? 100 : -100;
+    if (amounts[idx] + step >= 100) { amounts[idx] += step; diff -= step; }
+    i++;
+  }
+  return amounts.map((amount) => ({ amount, done: false, day: null }));
+}
+
+function gridRemaining() {
+  return state.goal.grid.filter((c) => !c.done).length;
 }
 
 /* ---------- Штрафы ---------- */
@@ -148,7 +214,7 @@ function runPenaltyCheck() {
 
   if (totalPenalty > 0) {
     $('penalty-message').textContent =
-      NOTIF[state.notifStyle].penalty(totalPenalty) +
+      pick(NOTIF[state.notifStyle].penalty)(fmtMoney(totalPenalty)) +
       (missed.length > 1 ? ` (пропущено дней: ${missed.length})` : '');
     showModal('modal-penalty');
     $('balance-card').classList.add('penalty-flash');
@@ -193,13 +259,21 @@ function renderDashboard() {
     banner.textContent = '✅ Сегодня ты в безопасности. Серия: ' + state.streak + ' 🔥';
   } else {
     banner.classList.add(state.notifStyle === 'harsh' ? 'bad' : 'warn');
-    banner.textContent = '⏰ ' + NOTIF[state.notifStyle].reminder;
+    banner.textContent = '⏰ ' + pickDaily(NOTIF[state.notifStyle].reminder);
   }
 
   // Блок пополнения
-  $('btn-deposit').disabled = depositedToday;
   $('deposit-done').classList.toggle('hidden', !depositedToday);
   $('input-deposit').placeholder = 'Сумма, например ' + Math.round(g.daily);
+
+  // Режим сетки
+  const isGrid = g.mode === 'grid';
+  const gridDone = isGrid && gridRemaining() === 0;
+  $('grid-block').classList.toggle('hidden', !isGrid);
+  // свободный ввод: линейный режим или сетка закрыта (докрыть недостачу после штрафов)
+  $('deposit-input-row').classList.toggle('hidden', isGrid && !gridDone);
+  if (isGrid) renderGrid(depositedToday, gridDone);
+  updateDepositButton(depositedToday, isGrid, gridDone);
 
   // Обратный отсчёт до полуночи (реальное время + демо-сдвиг не влияет на часы)
   clearInterval(countdownTimer);
@@ -218,6 +292,57 @@ function renderDashboard() {
   tick();
   countdownTimer = setInterval(tick, 1000);
 }
+
+/* ---------- Рендер сетки ---------- */
+
+let selectedCell = null;
+
+function updateDepositButton(depositedToday, isGrid, gridDone) {
+  const btn = $('btn-deposit');
+  if (depositedToday) {
+    btn.disabled = true;
+    btn.textContent = '💰 Пополнить сегодня';
+    return;
+  }
+  if (isGrid && !gridDone) {
+    const cell = selectedCell != null ? state.goal.grid[selectedCell] : null;
+    btn.disabled = !cell;
+    btn.textContent = cell ? `💰 Внести ${fmtMoney(cell.amount)}` : '💰 Выбери ячейку из сетки';
+  } else {
+    btn.disabled = false;
+    btn.textContent = '💰 Пополнить сегодня';
+  }
+}
+
+function renderGrid(depositedToday, gridDone) {
+  const wrap = $('grid-cells');
+  wrap.innerHTML = '';
+  const g = state.goal;
+  const total = g.grid.length;
+  $('grid-progress').textContent = `закрыто ${total - gridRemaining()} из ${total}`;
+  $('btn-grid-random').disabled = depositedToday || gridDone;
+  g.grid.forEach((cell, idx) => {
+    const el = document.createElement('button');
+    el.className = 'cell' + (cell.done ? ' done' : '') + (idx === selectedCell ? ' selected' : '');
+    el.textContent = cell.amount.toLocaleString('ru-RU');
+    if (cell.done) el.title = 'Закрыто ' + (cell.day ? fmtDay(cell.day) : '');
+    else if (!depositedToday) {
+      el.addEventListener('click', () => {
+        selectedCell = idx;
+        renderGrid(depositedToday, gridDone);
+        updateDepositButton(depositedToday, true, gridDone);
+      });
+    }
+    wrap.appendChild(el);
+  });
+}
+
+$('btn-grid-random').addEventListener('click', () => {
+  const free = state.goal.grid.map((c, i) => (c.done ? -1 : i)).filter((i) => i >= 0);
+  if (!free.length) return;
+  selectedCell = free[Math.floor(Math.random() * free.length)];
+  renderDashboard();
+});
 
 /* ---------- Рендер истории и штрафов ---------- */
 
@@ -364,19 +489,36 @@ $('btn-consent-decline').addEventListener('click', () => {
 
 /* ---------- Создание цели ---------- */
 
+let goalMode = 'linear';
+
 function validateGoalForm() {
   const name = $('input-goal-name').value.trim();
   const amount = +$('input-goal-amount').value;
   const days = +$('input-goal-days').value;
-  const valid = name.length > 0 && amount >= 1000 && days >= 7 && days <= 730;
+  let valid = name.length > 0 && amount >= 1000 && days >= 7 && days <= 730;
+  // в режиме сетки минимум 100 ₸ на ячейку
+  if (goalMode === 'grid' && days > 0 && amount / days < 100) valid = false;
   $('btn-create-goal').disabled = !valid;
   if (amount > 0 && days > 0) {
     $('goal-daily-preview').classList.remove('hidden');
-    $('goal-daily-amount').textContent = fmtMoney(amount / days) + ' / день';
+    $('goal-daily-amount').textContent = goalMode === 'grid'
+      ? `в среднем ${fmtMoney(amount / days)} / день (суммы разные)`
+      : fmtMoney(amount / days) + ' / день';
   } else {
     $('goal-daily-preview').classList.add('hidden');
   }
 }
+
+document.querySelectorAll('.pay-mode').forEach((btn) =>
+  btn.addEventListener('click', () => {
+    goalMode = btn.dataset.mode;
+    document.querySelectorAll('.pay-mode').forEach((b) =>
+      b.classList.toggle('active', b === btn));
+    $('mode-hint').textContent = goalMode === 'grid'
+      ? 'Сетка разных сумм — каждый день закрываешь одну ячейку (как бумажный челлендж)'
+      : 'Одинаковый взнос каждый день';
+    validateGoalForm();
+  }));
 
 ['input-goal-name', 'input-goal-amount', 'input-goal-days'].forEach((id) =>
   $(id).addEventListener('input', validateGoalForm));
@@ -398,7 +540,10 @@ $('btn-create-goal').addEventListener('click', () => {
     days,
     daily: target / days,
     createdDay: today,
+    mode: goalMode,
+    grid: goalMode === 'grid' ? generateGrid(target, days) : null,
   };
+  selectedCell = null;
   state.balance = 0;
   state.streak = 0;
   state.history = [];
@@ -419,13 +564,29 @@ $('btn-deposit-daily').addEventListener('click', () => {
 
 $('btn-deposit').addEventListener('click', () => {
   runPenaltyCheck();
-  const amount = +$('input-deposit').value;
-  if (!amount || amount <= 0) {
-    toast('Введите сумму пополнения', true);
-    return;
-  }
   const today = dayKey(appToday());
   if (state.lastDepositDay === today) return;
+
+  const g = state.goal;
+  const gridActive = g.mode === 'grid' && gridRemaining() > 0;
+  let amount;
+  if (gridActive) {
+    if (selectedCell == null || g.grid[selectedCell].done) {
+      toast('Сначала выбери ячейку из сетки', true);
+      return;
+    }
+    amount = g.grid[selectedCell].amount;
+    g.grid[selectedCell].done = true;
+    g.grid[selectedCell].day = today;
+    selectedCell = null;
+  } else {
+    amount = +$('input-deposit').value;
+    if (!amount || amount <= 0) {
+      toast('Введите сумму пополнения', true);
+      return;
+    }
+  }
+
   state.balance += amount;
   state.streak += 1;
   state.lastDepositDay = today;
@@ -433,10 +594,9 @@ $('btn-deposit').addEventListener('click', () => {
   state.history.unshift({ type: 'deposit', amount, day: today, ts: Date.now() });
   save();
   $('input-deposit').value = '';
-  const msgs = NOTIF[state.notifStyle].deposit;
-  toast(msgs[Math.floor(Math.random() * msgs.length)], state.notifStyle === 'harsh');
+  toast(pick(NOTIF[state.notifStyle].deposit), state.notifStyle === 'harsh');
   const pct = Math.min(100, Math.floor((state.balance / state.goal.target) * 100));
-  setTimeout(() => toast(NOTIF[state.notifStyle].progress(pct), state.notifStyle === 'harsh'), 1200);
+  setTimeout(() => toast(pick(NOTIF[state.notifStyle].progress)(pct), state.notifStyle === 'harsh'), 1200);
   renderDashboard();
 });
 
