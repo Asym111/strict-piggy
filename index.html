@@ -177,6 +177,16 @@
       </div>
     </div>
 
+    <div class="grid-card">
+      <div class="grid-head">
+        <b data-i18n="calTitle">📅 Календарь дисциплины</b>
+        <span class="tiny muted" id="cal-month"></span>
+      </div>
+      <div id="calendar" class="calendar"></div>
+    </div>
+
+    <div class="grid-card" id="duel-card"></div>
+
     <div id="grid-block" class="grid-card hidden">
       <div class="grid-head">
         <b data-i18n="gridTitle">🎲 Сетка сумм</b>
@@ -201,6 +211,7 @@
       <button class="tab" data-tab="history">📜<span data-i18n="tabHistory">История</span></button>
       <button class="tab" data-tab="penalties">💀<span data-i18n="tabPenalties">Штрафы</span></button>
       <button class="tab" data-tab="withdraw">🏦<span data-i18n="tabWithdraw">Вывод</span></button>
+      <button class="tab" data-tab="awards">🏅<span data-i18n="tabAwards">Награды</span></button>
     </nav>
   </section>
 
@@ -213,6 +224,7 @@
       <button class="tab active" data-tab="history">📜<span data-i18n="tabHistory">История</span></button>
       <button class="tab" data-tab="penalties">💀<span data-i18n="tabPenalties">Штрафы</span></button>
       <button class="tab" data-tab="withdraw">🏦<span data-i18n="tabWithdraw">Вывод</span></button>
+      <button class="tab" data-tab="awards">🏅<span data-i18n="tabAwards">Награды</span></button>
     </nav>
   </section>
 
@@ -228,6 +240,7 @@
       <button class="tab" data-tab="history">📜<span data-i18n="tabHistory">История</span></button>
       <button class="tab active" data-tab="penalties">💀<span data-i18n="tabPenalties">Штрафы</span></button>
       <button class="tab" data-tab="withdraw">🏦<span data-i18n="tabWithdraw">Вывод</span></button>
+      <button class="tab" data-tab="awards">🏅<span data-i18n="tabAwards">Награды</span></button>
     </nav>
   </section>
 
@@ -255,6 +268,21 @@
       <button class="tab" data-tab="history">📜<span data-i18n="tabHistory">История</span></button>
       <button class="tab" data-tab="penalties">💀<span data-i18n="tabPenalties">Штрафы</span></button>
       <button class="tab active" data-tab="withdraw">🏦<span data-i18n="tabWithdraw">Вывод</span></button>
+      <button class="tab" data-tab="awards">🏅<span data-i18n="tabAwards">Награды</span></button>
+    </nav>
+  </section>
+
+  <!-- ============ ЭКРАН: НАГРАДЫ ============ -->
+  <section id="screen-awards" class="screen has-tabbar hidden">
+    <header class="dash-header"><h1 data-i18n="awardsTitle">🏅 Награды</h1></header>
+    <div class="penalty-summary" id="awards-summary"></div>
+    <ul id="awards-list" class="op-list"></ul>
+    <nav class="tabbar">
+      <button class="tab" data-tab="dashboard">🏠<span data-i18n="tabHome">Главная</span></button>
+      <button class="tab" data-tab="history">📜<span data-i18n="tabHistory">История</span></button>
+      <button class="tab" data-tab="penalties">💀<span data-i18n="tabPenalties">Штрафы</span></button>
+      <button class="tab" data-tab="withdraw">🏦<span data-i18n="tabWithdraw">Вывод</span></button>
+      <button class="tab active" data-tab="awards">🏅<span data-i18n="tabAwards">Награды</span></button>
     </nav>
   </section>
 
@@ -283,6 +311,20 @@
       <div class="notif-style-picker">
         <button class="gender-pick settings-gender" data-gender="m" data-i18n="genderM">👨 Я парень</button>
         <button class="gender-pick settings-gender" data-gender="f" data-i18n="genderF">👩 Я девушка</button>
+      </div>
+    </div>
+    <div class="settings-group">
+      <h3 data-i18n="themeLabel">Тема</h3>
+      <div class="notif-style-picker">
+        <button class="theme-pick" data-theme="dark" data-i18n="themeDark">🌙 Тёмная</button>
+        <button class="theme-pick" data-theme="light" data-i18n="themeLight">☀️ Светлая</button>
+      </div>
+    </div>
+    <div class="settings-group">
+      <h3 data-i18n="soundLabel">Звук</h3>
+      <div class="notif-style-picker">
+        <button class="sound-pick" data-sound="on" data-i18n="soundOn">🔊 Включён</button>
+        <button class="sound-pick" data-sound="off" data-i18n="soundOff">🔇 Выключен</button>
       </div>
     </div>
     <div class="settings-group">

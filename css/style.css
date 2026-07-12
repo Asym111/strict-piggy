@@ -14,6 +14,15 @@
   --radius: 16px;
 }
 
+body.light {
+  --bg: #f2f2f6;
+  --surface: #ffffff;
+  --surface2: #e9e9f0;
+  --border: #d5d5e0;
+  --text: #17171f;
+  --muted: #6d6d7c;
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html, body { height: 100%; }
@@ -340,6 +349,82 @@ h3 { font-size: 15px; color: var(--muted); text-transform: uppercase; letter-spa
   text-align: center;
 }
 
+/* ===== Календарь дисциплины ===== */
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.cal-wd {
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  padding: 2px 0;
+}
+.cal-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--surface2);
+  border: 1px solid transparent;
+  color: var(--muted);
+}
+.cal-day.empty { background: transparent; }
+.cal-day.future { opacity: .35; }
+.cal-day.deposit { background: rgba(52, 199, 89, .18); color: var(--accent); border-color: rgba(52, 199, 89, .4); }
+.cal-day.penalty { background: rgba(255, 59, 48, .16); color: var(--danger); border-color: rgba(255, 59, 48, .4); }
+.cal-day.today { border-color: var(--warn); box-shadow: 0 0 8px rgba(255, 204, 0, .35); }
+
+/* ===== Дуэль ===== */
+.duel-row { display: flex; align-items: center; gap: 10px; }
+.duel-row .duel-name { width: 86px; font-size: 13px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.duel-row .progress-track { flex: 1; }
+.duel-row .duel-pct { font-size: 13px; font-weight: 800; width: 42px; text-align: right; }
+.duel-pot {
+  background: rgba(255, 59, 48, .08);
+  border: 1px dashed var(--danger);
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+  font-size: 13px;
+}
+.duel-code-badge {
+  background: var(--surface2);
+  border: 1px dashed var(--accent);
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: var(--accent);
+  cursor: pointer;
+}
+.duel-join-row { display: flex; gap: 8px; }
+.duel-join-row .input { flex: 1; text-transform: uppercase; }
+.duel-join-row .btn { width: auto; padding: 12px 16px; }
+
+/* ===== Награды ===== */
+.award-item { gap: 14px; }
+.award-item .award-emoji { font-size: 30px; flex-shrink: 0; }
+.award-item.locked { opacity: .45; filter: grayscale(1); }
+.award-main { flex: 1; min-width: 0; }
+.award-share {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 16px;
+  padding: 8px 12px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
 /* ===== Таббар ===== */
 .tabbar {
   position: fixed;
@@ -354,6 +439,7 @@ h3 { font-size: 15px; color: var(--muted); text-transform: uppercase; letter-spa
   border-top: 1px solid var(--border);
   padding: 8px 0 14px;
 }
+body.light .tabbar { background: rgba(255, 255, 255, .92); }
 .tab {
   flex: 1;
   background: none;
