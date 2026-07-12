@@ -71,8 +71,39 @@ h3 { font-size: 15px; color: var(--muted); text-transform: uppercase; letter-spa
 
 .icon-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; font-size: 18px; padding: 8px 12px; cursor: pointer; }
 
+/* ===== Логотип и язык ===== */
+.app-logo {
+  display: block;
+  width: 112px;
+  height: 112px;
+  margin: 0 auto;
+  object-fit: cover;
+  border-radius: 26px;
+  filter: drop-shadow(0 12px 30px rgba(255, 50, 56, .25));
+}
+.app-logo-sm { width: 72px; height: 72px; border-radius: 18px; }
+
+.lang-switch {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  display: flex;
+  gap: 6px;
+}
+.lang-chip {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 7px 12px;
+  cursor: pointer;
+}
+.lang-chip.active { border-color: var(--accent); color: var(--accent); }
+
 /* ===== Онбординг ===== */
-#screen-onboarding { justify-content: center; text-align: center; }
+#screen-onboarding { justify-content: center; text-align: center; position: relative; }
 .onboarding-slides { position: relative; min-height: 240px; }
 .slide { display: none; flex-direction: column; gap: 14px; align-items: center; }
 .slide.active { display: flex; animation: fadeIn .35s ease; }
@@ -170,6 +201,23 @@ h3 { font-size: 15px; color: var(--muted); text-transform: uppercase; letter-spa
   transition: all .15s;
 }
 .notif-style.active { border-color: var(--accent); color: var(--text); background: rgba(52, 199, 89, .1); }
+.pay-mode, .gender-pick, .lang-pick {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--muted);
+  padding: 13px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s;
+}
+.pay-mode.active, .gender-pick.active, .lang-pick.active {
+  border-color: var(--accent);
+  color: var(--text);
+  background: rgba(52, 199, 89, .1);
+}
 
 /* ===== Дашборд ===== */
 .dash-header { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
@@ -242,7 +290,7 @@ h3 { font-size: 15px; color: var(--muted); text-transform: uppercase; letter-spa
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 6px;
-  max-height: 240px;
+  max-height: min(240px, 32dvh);
   overflow-y: auto;
 }
 .cell {
@@ -267,7 +315,18 @@ h3 { font-size: 15px; color: var(--muted); text-transform: uppercase; letter-spa
   cursor: default;
 }
 
-.deposit-block { display: flex; flex-direction: column; gap: 10px; }
+/* Кнопка пополнения всегда видна над таббаром (фикс мобильной версии) */
+.deposit-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: sticky;
+  bottom: 78px;
+  background: var(--bg);
+  padding: 10px 0 6px;
+  z-index: 5;
+  box-shadow: 0 -14px 18px -12px rgba(0, 0, 0, .8);
+}
 .deposit-input-row { display: flex; gap: 10px; align-items: stretch; }
 .deposit-input-row .input { flex: 1; }
 .countdown { text-align: center; font-size: 13px; color: var(--muted); }
@@ -424,3 +483,26 @@ h3 { font-size: 15px; color: var(--muted); text-transform: uppercase; letter-spa
   box-shadow: 0 8px 30px rgba(0, 0, 0, .4);
 }
 .toast.harsh { border-left-color: var(--danger); }
+
+/* Хайповый акцент: крупные уведомления-события */
+.toast.impact {
+  font-size: 17px;
+  font-weight: 800;
+  text-align: center;
+  padding: 18px 16px;
+  border: 2px solid var(--accent);
+  border-radius: 16px;
+  background: linear-gradient(145deg, var(--surface2), #12241a);
+  box-shadow: 0 0 40px rgba(52, 199, 89, .35);
+  animation: impactPop .45s cubic-bezier(.2, 1.4, .4, 1);
+}
+.toast.impact.harsh {
+  border-color: var(--danger);
+  background: linear-gradient(145deg, var(--surface2), #2a1113);
+  box-shadow: 0 0 40px rgba(255, 59, 48, .4);
+}
+@keyframes impactPop {
+  0% { opacity: 0; transform: scale(.7) translateY(-16px); }
+  70% { transform: scale(1.05); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}

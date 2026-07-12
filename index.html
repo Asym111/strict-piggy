@@ -3,125 +3,145 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#0d0d12">
   <title>Строгая Копилка</title>
+
+  <link rel="manifest" href="./assets/manifest.webmanifest">
+  <meta name="theme-color" content="#0A0A0A">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Строгая Копилка">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/icon-32x32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./assets/icons/icon-192x192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/icon-180x180.png">
+
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
   <!-- ============ ЭКРАН: ОНБОРДИНГ ============ -->
   <section id="screen-onboarding" class="screen">
+    <div class="lang-switch">
+      <button class="lang-chip" data-lang="ru">RU</button>
+      <button class="lang-chip" data-lang="en">EN</button>
+    </div>
     <div class="onboarding-slides">
       <div class="slide active" data-slide="0">
-        <div class="slide-emoji">🐷</div>
-        <h1>Строгая Копилка</h1>
-        <p>Приложение, которое <b>заставит</b> тебя накопить. Никаких оправданий. Никакой жалости.</p>
+        <img src="./assets/strict-piggy-logo-master.png" alt="Строгая Копилка" class="app-logo">
+        <h1 data-i18n="ob1Title">Строгая Копилка</h1>
+        <p data-i18n-html="ob1Text"></p>
       </div>
       <div class="slide" data-slide="1">
         <div class="slide-emoji">⚡</div>
-        <h1>Жёсткие правила</h1>
-        <p>Пополняешь копилку <b>каждый день</b>. Пропустил день — теряешь <b class="red">10% всех накоплений</b>. Навсегда.</p>
+        <h1 data-i18n="ob2Title">Жёсткие правила</h1>
+        <p data-i18n-html="ob2Text"></p>
       </div>
       <div class="slide" data-slide="2">
         <div class="slide-emoji">🏆</div>
-        <h1>Цель — всё</h1>
-        <p>Вывести деньги можно <b>только после достижения цели</b>. Дисциплина или потери — выбор за тобой.</p>
+        <h1 data-i18n="ob3Title">Цель — всё</h1>
+        <p data-i18n-html="ob3Text"></p>
       </div>
     </div>
     <div class="dots">
       <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
     </div>
-    <button id="btn-onboarding-next" class="btn btn-primary">Далее</button>
-    <button id="btn-onboarding-skip" class="btn btn-ghost">Пропустить</button>
+    <button id="btn-onboarding-next" class="btn btn-primary" data-i18n="next">Далее</button>
+    <button id="btn-onboarding-skip" class="btn btn-ghost" data-i18n="skip">Пропустить</button>
   </section>
 
   <!-- ============ ЭКРАН: ВХОД ============ -->
   <section id="screen-signin" class="screen hidden">
     <div class="signin-box">
-      <div class="slide-emoji">🔐</div>
-      <h1>Вход в аккаунт</h1>
-      <p class="muted">Для продолжения войдите через Google</p>
+      <img src="./assets/strict-piggy-logo-master.png" alt="" class="app-logo app-logo-sm">
+      <h1 data-i18n="signinTitle">Вход в аккаунт</h1>
+      <p class="muted" data-i18n="signinSub">Для продолжения войдите через Google</p>
       <button id="btn-google-signin" class="btn btn-google">
         <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-        Войти через Google
+        <span data-i18n="googleBtn">Войти через Google</span>
       </button>
-      <div class="signin-divider tiny muted">или демо-режим без аккаунта</div>
-      <input type="email" id="input-email" class="input" placeholder="Email для демо-режима" autocomplete="email">
-      <button id="btn-demo-signin" class="btn btn-ghost">Продолжить в демо-режиме</button>
+      <div class="signin-divider tiny muted" data-i18n="demoDivider">или демо-режим без аккаунта</div>
+      <input type="email" id="input-email" class="input" data-i18n-ph="demoEmailPh" placeholder="Email для демо-режима" autocomplete="email">
+      <button id="btn-demo-signin" class="btn btn-ghost" data-i18n="demoBtn">Продолжить в демо-режиме</button>
     </div>
   </section>
 
   <!-- ============ ЭКРАН: СОГЛАСИЕ НА ШТРАФЫ ============ -->
   <section id="screen-consent" class="screen hidden">
     <div class="consent-scroll">
-      <h1 class="consent-title">ВНИМАНИЕ!<br>ЖЁСТКИЕ ПРАВИЛА</h1>
+      <h1 class="consent-title" data-i18n-html="consentTitle">ВНИМАНИЕ!<br>ЖЁСТКИЕ ПРАВИЛА</h1>
       <div class="consent-warning">
-        <p>Если вы пропустите ежедневное пополнение хотя бы на <b>1 день</b>, с вашего баланса автоматически списывается <b>10% от текущих накоплений</b> в пользу владельца приложения.</p>
-        <p><b>ЭТО НЕОБРАТИМО.</b> Штрафы не возвращаются.</p>
-        <p>Отзыв согласия = удаление аккаунта + вывод остатка <b>с потерей 50%</b>.</p>
-        <p>Вывод накоплений возможен <b>только после достижения цели</b>.</p>
+        <p data-i18n-html="consentP1"></p>
+        <p data-i18n-html="consentP2"></p>
+        <p data-i18n-html="consentP3"></p>
+        <p data-i18n-html="consentP4"></p>
       </div>
-      <div class="rules-version muted tiny">Версия правил: 1.0 от 01.07.2026</div>
+      <div class="rules-version muted tiny" data-i18n="rulesVersion">Версия правил: 1.0 от 01.07.2026</div>
       <label class="consent-check">
         <input type="checkbox" id="chk-consent">
-        <span>Я полностью понимаю и соглашаюсь с правилами, включая безвозвратные штрафы 10% за каждый пропущенный день</span>
+        <span data-i18n="consentCheck">Я полностью понимаю и соглашаюсь с правилами, включая безвозвратные штрафы 10% за каждый пропущенный день</span>
       </label>
-      <button id="btn-consent" class="btn btn-danger" disabled>Я ПОЛНОСТЬЮ ПОНИМАЮ И СОГЛАШАЮСЬ</button>
-      <button id="btn-consent-decline" class="btn btn-ghost">Отказаться и выйти</button>
+      <button id="btn-consent" class="btn btn-danger" data-i18n="consentBtn" disabled>Я ПОЛНОСТЬЮ ПОНИМАЮ И СОГЛАШАЮСЬ</button>
+      <button id="btn-consent-decline" class="btn btn-ghost" data-i18n="consentDecline">Отказаться и выйти</button>
     </div>
   </section>
 
   <!-- ============ МОДАЛ: ПОВТОРНОЕ ПОДТВЕРЖДЕНИЕ ============ -->
   <div id="modal-confirm-consent" class="modal hidden">
     <div class="modal-box">
-      <h2>Повторное подтверждение</h2>
-      <p>На ваш email отправлен код подтверждения (демо-код: <b id="demo-code"></b>)</p>
-      <input type="text" id="input-code" class="input" placeholder="Введите код из письма" maxlength="6" inputmode="numeric">
-      <p id="code-error" class="red tiny hidden">Неверный код. Попробуйте ещё раз.</p>
-      <button id="btn-code-confirm" class="btn btn-danger">Подтвердить согласие</button>
-      <button id="btn-code-cancel" class="btn btn-ghost">Отмена</button>
+      <h2 data-i18n="codeTitle">Повторное подтверждение</h2>
+      <p><span data-i18n="codeText">На ваш email отправлен код подтверждения (демо-код:</span> <b id="demo-code"></b>)</p>
+      <input type="text" id="input-code" class="input" data-i18n-ph="codePh" placeholder="Введите код из письма" maxlength="6" inputmode="numeric">
+      <p id="code-error" class="red tiny hidden" data-i18n="codeError">Неверный код. Попробуйте ещё раз.</p>
+      <button id="btn-code-confirm" class="btn btn-danger" data-i18n="codeConfirm">Подтвердить согласие</button>
+      <button id="btn-code-cancel" class="btn btn-ghost" data-i18n="cancel">Отмена</button>
     </div>
   </div>
 
   <!-- ============ ЭКРАН: СОЗДАНИЕ ЦЕЛИ ============ -->
   <section id="screen-goal" class="screen hidden">
-    <h1>🎯 Твоя цель</h1>
-    <p class="muted">Определи, ради чего будешь страдать</p>
+    <h1 data-i18n="goalTitle">🎯 Твоя цель</h1>
+    <p class="muted" data-i18n="goalSub">Определи, ради чего будешь страдать</p>
     <label class="field">
-      <span>Название цели</span>
-      <input type="text" id="input-goal-name" class="input" placeholder="Например: MacBook Pro" maxlength="40">
+      <span data-i18n="goalName">Название цели</span>
+      <input type="text" id="input-goal-name" class="input" data-i18n-ph="goalNamePh" placeholder="Например: MacBook Pro" maxlength="40">
     </label>
     <label class="field">
-      <span>Сумма цели, ₸</span>
+      <span data-i18n="goalAmount">Сумма цели, ₸</span>
       <input type="number" id="input-goal-amount" class="input" placeholder="500000" min="1000">
     </label>
     <label class="field">
-      <span>Срок, дней</span>
+      <span data-i18n="goalDays">Срок, дней</span>
       <input type="number" id="input-goal-days" class="input" placeholder="90" min="7" max="730">
     </label>
     <label class="field">
-      <span>Режим накопления</span>
+      <span data-i18n="modeLabel">Режим накопления</span>
       <div class="notif-style-picker">
-        <button class="pay-mode active" data-mode="linear">📏 Линейно</button>
-        <button class="pay-mode" data-mode="grid">🎲 Сетка сумм</button>
+        <button class="pay-mode active" data-mode="linear" data-i18n="modeLinear">📏 Линейно</button>
+        <button class="pay-mode" data-mode="grid" data-i18n="modeGrid">🎲 Сетка сумм</button>
       </div>
-      <span class="tiny muted" id="mode-hint">Одинаковый взнос каждый день</span>
+      <span class="tiny muted" id="mode-hint"></span>
     </label>
     <div id="goal-daily-preview" class="goal-preview hidden">
-      Ежедневный взнос: <b id="goal-daily-amount">—</b>
+      <span data-i18n="dailyLabel">Ежедневный взнос:</span> <b id="goal-daily-amount">—</b>
     </div>
     <label class="field">
-      <span>Стиль уведомлений</span>
+      <span data-i18n="genderLabel">К кому обращаться?</span>
       <div class="notif-style-picker">
-        <button class="notif-style active" data-style="harsh">😤 Жёсткий</button>
-        <button class="notif-style" data-style="soft">🌤 Мотивирующий</button>
+        <button class="gender-pick goal-gender active" data-gender="m" data-i18n="genderM">👨 Я парень</button>
+        <button class="gender-pick goal-gender" data-gender="f" data-i18n="genderF">👩 Я девушка</button>
       </div>
     </label>
-    <button id="btn-create-goal" class="btn btn-primary" disabled>Начать копить</button>
+    <label class="field">
+      <span data-i18n="notifLabel">Стиль уведомлений</span>
+      <div class="notif-style-picker">
+        <button class="notif-style active" data-style="harsh" data-i18n="styleHarsh">😤 Жёсткий</button>
+        <button class="notif-style" data-style="soft" data-i18n="styleSoft">🌤 Мотивирующий</button>
+      </div>
+    </label>
+    <button id="btn-create-goal" class="btn btn-primary" data-i18n="createGoal" disabled>Начать копить</button>
   </section>
 
   <!-- ============ ЭКРАН: ДАШБОРД ============ -->
-  <section id="screen-dashboard" class="screen hidden">
+  <section id="screen-dashboard" class="screen has-tabbar hidden">
     <header class="dash-header">
       <div>
         <div class="tiny muted" id="dash-email"></div>
@@ -133,132 +153,146 @@
     <div id="dash-status-banner" class="status-banner hidden"></div>
 
     <div class="balance-card" id="balance-card">
-      <div class="tiny muted">Накоплено</div>
+      <div class="tiny muted" data-i18n="saved">Накоплено</div>
       <div class="balance" id="dash-balance">0 ₸</div>
       <div class="progress-track"><div class="progress-fill" id="dash-progress"></div></div>
       <div class="progress-labels">
         <span id="dash-percent">0%</span>
-        <span id="dash-target">из 0 ₸</span>
+        <span id="dash-target"></span>
       </div>
     </div>
 
     <div class="stat-row">
       <div class="stat-card">
         <div class="stat-value" id="dash-streak">0</div>
-        <div class="tiny muted">дней подряд 🔥</div>
+        <div class="tiny muted" data-i18n="statStreak">дней подряд 🔥</div>
       </div>
       <div class="stat-card">
         <div class="stat-value" id="dash-days-left">0</div>
-        <div class="tiny muted">дней осталось</div>
+        <div class="tiny muted" data-i18n="statDaysLeft">дней осталось</div>
       </div>
       <div class="stat-card">
         <div class="stat-value red" id="dash-penalties-total">0 ₸</div>
-        <div class="tiny muted">штрафов 💀</div>
+        <div class="tiny muted" data-i18n="statPenalties">штрафов 💀</div>
       </div>
     </div>
 
     <div id="grid-block" class="grid-card hidden">
       <div class="grid-head">
-        <b>🎲 Сетка сумм</b>
+        <b data-i18n="gridTitle">🎲 Сетка сумм</b>
         <span class="tiny muted" id="grid-progress"></span>
       </div>
       <div class="grid-cells" id="grid-cells"></div>
-      <button id="btn-grid-random" class="btn btn-small btn-ghost">🎲 Выбрать случайную ячейку</button>
+      <button id="btn-grid-random" class="btn btn-small btn-ghost" data-i18n="gridRandom">🎲 Выбрать случайную ячейку</button>
     </div>
 
-    <div class="deposit-block">
+    <div class="deposit-block" id="deposit-block">
       <div id="deposit-countdown" class="countdown"></div>
       <div class="deposit-input-row" id="deposit-input-row">
         <input type="number" id="input-deposit" class="input" placeholder="Сумма" min="1">
-        <button id="btn-deposit-daily" class="btn btn-small btn-ghost" title="Подставить дневной взнос">дневной</button>
+        <button id="btn-deposit-daily" class="btn btn-small btn-ghost" data-i18n="dailyBtn">дневной</button>
       </div>
-      <button id="btn-deposit" class="btn btn-primary">💰 Пополнить сегодня</button>
-      <div id="deposit-done" class="deposit-done hidden">✅ Сегодняшний взнос сделан. Ты в безопасности до полуночи.</div>
+      <button id="btn-deposit" class="btn btn-primary" data-i18n="depositBtn">💰 Пополнить сегодня</button>
+      <div id="deposit-done" class="deposit-done hidden" data-i18n="depositDone">✅ Сегодняшний взнос сделан. Ты в безопасности до полуночи.</div>
     </div>
 
     <nav class="tabbar">
-      <button class="tab active" data-tab="dashboard">🏠<span>Главная</span></button>
-      <button class="tab" data-tab="history">📜<span>История</span></button>
-      <button class="tab" data-tab="penalties">💀<span>Штрафы</span></button>
-      <button class="tab" data-tab="withdraw">🏦<span>Вывод</span></button>
+      <button class="tab active" data-tab="dashboard">🏠<span data-i18n="tabHome">Главная</span></button>
+      <button class="tab" data-tab="history">📜<span data-i18n="tabHistory">История</span></button>
+      <button class="tab" data-tab="penalties">💀<span data-i18n="tabPenalties">Штрафы</span></button>
+      <button class="tab" data-tab="withdraw">🏦<span data-i18n="tabWithdraw">Вывод</span></button>
     </nav>
   </section>
 
   <!-- ============ ЭКРАН: ИСТОРИЯ ============ -->
-  <section id="screen-history" class="screen hidden">
-    <header class="dash-header"><h1>📜 История операций</h1></header>
+  <section id="screen-history" class="screen has-tabbar hidden">
+    <header class="dash-header"><h1 data-i18n="historyTitle">📜 История операций</h1></header>
     <ul id="history-list" class="op-list"></ul>
     <nav class="tabbar">
-      <button class="tab" data-tab="dashboard">🏠<span>Главная</span></button>
-      <button class="tab active" data-tab="history">📜<span>История</span></button>
-      <button class="tab" data-tab="penalties">💀<span>Штрафы</span></button>
-      <button class="tab" data-tab="withdraw">🏦<span>Вывод</span></button>
+      <button class="tab" data-tab="dashboard">🏠<span data-i18n="tabHome">Главная</span></button>
+      <button class="tab active" data-tab="history">📜<span data-i18n="tabHistory">История</span></button>
+      <button class="tab" data-tab="penalties">💀<span data-i18n="tabPenalties">Штрафы</span></button>
+      <button class="tab" data-tab="withdraw">🏦<span data-i18n="tabWithdraw">Вывод</span></button>
     </nav>
   </section>
 
   <!-- ============ ЭКРАН: ШТРАФЫ ============ -->
-  <section id="screen-penalties" class="screen hidden">
-    <header class="dash-header"><h1>💀 История штрафов</h1></header>
+  <section id="screen-penalties" class="screen has-tabbar hidden">
+    <header class="dash-header"><h1 data-i18n="penaltiesTitle">💀 История штрафов</h1></header>
     <div class="penalty-summary">
-      Всего потеряно: <b class="red" id="penalties-sum">0 ₸</b>
+      <span data-i18n="totalLost">Всего потеряно:</span> <b class="red" id="penalties-sum">0 ₸</b>
     </div>
     <ul id="penalties-list" class="op-list"></ul>
     <nav class="tabbar">
-      <button class="tab" data-tab="dashboard">🏠<span>Главная</span></button>
-      <button class="tab" data-tab="history">📜<span>История</span></button>
-      <button class="tab active" data-tab="penalties">💀<span>Штрафы</span></button>
-      <button class="tab" data-tab="withdraw">🏦<span>Вывод</span></button>
+      <button class="tab" data-tab="dashboard">🏠<span data-i18n="tabHome">Главная</span></button>
+      <button class="tab" data-tab="history">📜<span data-i18n="tabHistory">История</span></button>
+      <button class="tab active" data-tab="penalties">💀<span data-i18n="tabPenalties">Штрафы</span></button>
+      <button class="tab" data-tab="withdraw">🏦<span data-i18n="tabWithdraw">Вывод</span></button>
     </nav>
   </section>
 
   <!-- ============ ЭКРАН: ВЫВОД ============ -->
-  <section id="screen-withdraw" class="screen hidden">
-    <header class="dash-header"><h1>🏦 Вывод средств</h1></header>
+  <section id="screen-withdraw" class="screen has-tabbar hidden">
+    <header class="dash-header"><h1 data-i18n="withdrawTitle">🏦 Вывод средств</h1></header>
     <div id="withdraw-locked" class="withdraw-box">
       <div class="slide-emoji">🔒</div>
-      <p>Вывод доступен <b>только после достижения цели</b>.</p>
-      <p class="muted">Осталось накопить: <b id="withdraw-remaining">0 ₸</b></p>
+      <p data-i18n-html="withdrawLocked"></p>
+      <p class="muted"><span data-i18n="withdrawRemaining">Осталось накопить:</span> <b id="withdraw-remaining">0 ₸</b></p>
     </div>
     <div id="withdraw-unlocked" class="withdraw-box hidden">
       <div class="slide-emoji">🎉</div>
-      <h2>Цель достигнута!</h2>
-      <p>Ты сделал это. Весь баланс доступен к выводу.</p>
-      <button id="btn-withdraw" class="btn btn-primary">Вывести <span id="withdraw-amount"></span></button>
+      <h2 data-i18n="goalReached">Цель достигнута!</h2>
+      <p data-i18n="withdrawUnlockedText">Ты сделал это. Весь баланс доступен к выводу.</p>
+      <button id="btn-withdraw" class="btn btn-primary"><span data-i18n="withdrawBtn">Вывести</span> <span id="withdraw-amount"></span></button>
     </div>
     <div class="danger-zone">
-      <h3>⚠️ Опасная зона</h3>
-      <p class="tiny muted">Отзыв согласия удаляет аккаунт. Остаток выводится с потерей 50%.</p>
-      <button id="btn-revoke" class="btn btn-danger-outline">Отозвать согласие и удалить аккаунт</button>
+      <h3 data-i18n="dangerZone">⚠️ Опасная зона</h3>
+      <p class="tiny muted" data-i18n="dangerText">Отзыв согласия удаляет аккаунт. Остаток выводится с потерей 50%.</p>
+      <button id="btn-revoke" class="btn btn-danger-outline" data-i18n="revokeBtn">Отозвать согласие и удалить аккаунт</button>
     </div>
     <nav class="tabbar">
-      <button class="tab" data-tab="dashboard">🏠<span>Главная</span></button>
-      <button class="tab" data-tab="history">📜<span>История</span></button>
-      <button class="tab" data-tab="penalties">💀<span>Штрафы</span></button>
-      <button class="tab active" data-tab="withdraw">🏦<span>Вывод</span></button>
+      <button class="tab" data-tab="dashboard">🏠<span data-i18n="tabHome">Главная</span></button>
+      <button class="tab" data-tab="history">📜<span data-i18n="tabHistory">История</span></button>
+      <button class="tab" data-tab="penalties">💀<span data-i18n="tabPenalties">Штрафы</span></button>
+      <button class="tab active" data-tab="withdraw">🏦<span data-i18n="tabWithdraw">Вывод</span></button>
     </nav>
   </section>
 
   <!-- ============ ЭКРАН: НАСТРОЙКИ ============ -->
   <section id="screen-settings" class="screen hidden">
     <header class="dash-header">
-      <h1>⚙️ Настройки</h1>
+      <h1 data-i18n="settingsTitle">⚙️ Настройки</h1>
       <button id="btn-settings-back" class="icon-btn">✕</button>
     </header>
     <div class="settings-group">
-      <h3>Стиль уведомлений</h3>
+      <h3 data-i18n="langLabel">Язык / Language</h3>
       <div class="notif-style-picker">
-        <button class="notif-style settings-notif" data-style="harsh">😤 Жёсткий</button>
-        <button class="notif-style settings-notif" data-style="soft">🌤 Мотивирующий</button>
+        <button class="lang-pick" data-lang="ru">🇷🇺 Русский</button>
+        <button class="lang-pick" data-lang="en">🇬🇧 English</button>
       </div>
     </div>
     <div class="settings-group">
-      <h3>Согласие</h3>
+      <h3 data-i18n="notifLabel">Стиль уведомлений</h3>
+      <div class="notif-style-picker">
+        <button class="notif-style settings-notif" data-style="harsh" data-i18n="styleHarsh">😤 Жёсткий</button>
+        <button class="notif-style settings-notif" data-style="soft" data-i18n="styleSoft">🌤 Мотивирующий</button>
+      </div>
+    </div>
+    <div class="settings-group">
+      <h3 data-i18n="genderLabel">К кому обращаться?</h3>
+      <div class="notif-style-picker">
+        <button class="gender-pick settings-gender" data-gender="m" data-i18n="genderM">👨 Я парень</button>
+        <button class="gender-pick settings-gender" data-gender="f" data-i18n="genderF">👩 Я девушка</button>
+      </div>
+    </div>
+    <div class="settings-group">
+      <h3 data-i18n="consentLogTitle">Согласие</h3>
       <div class="tiny muted" id="consent-log"></div>
     </div>
     <div class="settings-group">
-      <h3>🧪 Демо-режим</h3>
-      <p class="tiny muted">Симуляция следующего дня — для проверки логики штрафов.</p>
-      <button id="btn-simulate-day" class="btn btn-ghost">⏭ Симулировать следующий день</button>
+      <h3 data-i18n="demoTitle">🧪 Демо-режим</h3>
+      <p class="tiny muted" data-i18n="demoText">Симуляция следующего дня — для проверки логики штрафов.</p>
+      <button id="btn-simulate-day" class="btn btn-ghost" data-i18n="simulateBtn">⏭ Симулировать следующий день</button>
     </div>
   </section>
 
@@ -266,31 +300,31 @@
   <div id="modal-penalty" class="modal hidden">
     <div class="modal-box penalty-modal">
       <div class="slide-emoji">💀</div>
-      <h2 class="red">ШТРАФ!</h2>
+      <h2 class="red" data-i18n="penaltyTitle">ШТРАФ!</h2>
       <p id="penalty-message"></p>
-      <button id="btn-penalty-ok" class="btn btn-danger">Принять потерю</button>
+      <button id="btn-penalty-ok" class="btn btn-danger" data-i18n="penaltyOk">Принять потерю</button>
     </div>
   </div>
 
   <!-- ============ МОДАЛ: ОТЗЫВ СОГЛАСИЯ ============ -->
   <div id="modal-revoke" class="modal hidden">
     <div class="modal-box">
-      <h2 class="red">Отзыв согласия</h2>
-      <p>Аккаунт будет удалён. Вы получите <b id="revoke-amount"></b> (50% от баланса <span id="revoke-balance"></span>).</p>
-      <p>Для подтверждения введите: <b>УДАЛИТЬ</b></p>
-      <input type="text" id="input-revoke" class="input" placeholder="УДАЛИТЬ">
-      <button id="btn-revoke-confirm" class="btn btn-danger" disabled>Удалить аккаунт навсегда</button>
-      <button id="btn-revoke-cancel" class="btn btn-ghost">Отмена</button>
+      <h2 class="red" data-i18n="revokeTitle">Отзыв согласия</h2>
+      <p><span data-i18n="revokeText1">Аккаунт будет удалён. Вы получите</span> <b id="revoke-amount"></b> <span data-i18n="revokeText2">(50% от баланса</span> <span id="revoke-balance"></span>)</p>
+      <p><span data-i18n="revokeType">Для подтверждения введите:</span> <b id="revoke-word">УДАЛИТЬ</b></p>
+      <input type="text" id="input-revoke" class="input" data-i18n-ph="revokePh" placeholder="УДАЛИТЬ">
+      <button id="btn-revoke-confirm" class="btn btn-danger" data-i18n="revokeConfirm" disabled>Удалить аккаунт навсегда</button>
+      <button id="btn-revoke-cancel" class="btn btn-ghost" data-i18n="cancel">Отмена</button>
     </div>
   </div>
 
-  <!-- ============ МОДАЛ: УСПЕХ ВЫВОДА ============ -->
+  <!-- ============ МОДАЛ: УСПЕХ ============ -->
   <div id="modal-success" class="modal hidden">
     <div class="modal-box">
       <div class="slide-emoji">🏆</div>
       <h2 id="success-title"></h2>
       <p id="success-message"></p>
-      <button id="btn-success-ok" class="btn btn-primary">Начать заново</button>
+      <button id="btn-success-ok" class="btn btn-primary" data-i18n="successOk">Начать заново</button>
     </div>
   </div>
 
