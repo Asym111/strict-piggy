@@ -210,9 +210,9 @@ h3 { font-size: 15px; color: var(--muted); text-transform: uppercase; letter-spa
   transition: all .15s;
 }
 .notif-style.active { border-color: var(--accent); color: var(--text); background: rgba(52, 199, 89, .1); }
-.pay-mode, .gender-pick, .lang-pick {
+.pay-mode, .gender-pick, .lang-pick, .theme-pick, .sound-pick {
   flex: 1;
-  background: var(--surface);
+  background: var(--surface2);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   color: var(--muted);
@@ -222,10 +222,14 @@ h3 { font-size: 15px; color: var(--muted); text-transform: uppercase; letter-spa
   cursor: pointer;
   transition: all .15s;
 }
-.pay-mode.active, .gender-pick.active, .lang-pick.active {
+.pay-mode:hover, .gender-pick:hover, .lang-pick:hover, .theme-pick:hover, .sound-pick:hover {
+  border-color: var(--accent);
+}
+.pay-mode.active, .gender-pick.active, .lang-pick.active, .theme-pick.active, .sound-pick.active {
   border-color: var(--accent);
   color: var(--text);
-  background: rgba(52, 199, 89, .1);
+  background: rgba(52, 199, 89, .12);
+  box-shadow: 0 0 12px rgba(52, 199, 89, .18), inset 0 0 0 1px var(--accent);
 }
 
 /* ===== Дашборд ===== */

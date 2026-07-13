@@ -233,9 +233,9 @@ const I18N = {
     consentBtn: 'Я ПОЛНОСТЬЮ ПОНИМАЮ И СОГЛАШАЮСЬ',
     consentDecline: 'Отказаться и выйти',
     codeTitle: 'Повторное подтверждение',
-    codeText: 'На ваш email отправлен код подтверждения (демо-код:',
-    codePh: 'Введите код из письма',
-    codeError: 'Неверный код. Попробуйте ещё раз.',
+    codeText: 'Чтобы подтвердить согласие, введите слово:',
+    agreeWord: 'СОГЛАСЕН',
+    codeError: 'Неверное слово. Попробуйте ещё раз.',
     codeConfirm: 'Подтвердить согласие',
     cancel: 'Отмена',
     goalTitle: '🎯 Твоя цель',
@@ -397,9 +397,9 @@ const I18N = {
     consentBtn: 'I FULLY UNDERSTAND AND AGREE',
     consentDecline: 'Decline and exit',
     codeTitle: 'Second confirmation',
-    codeText: 'A confirmation code was sent to your email (demo code:',
-    codePh: 'Enter the code from the email',
-    codeError: 'Wrong code. Try again.',
+    codeText: 'To confirm your consent, type the word:',
+    agreeWord: 'I AGREE',
+    codeError: 'Wrong word. Try again.',
     codeConfirm: 'Confirm consent',
     cancel: 'Cancel',
     goalTitle: '🎯 Your goal',
@@ -984,6 +984,8 @@ function applyI18n() {
   $('mode-hint').textContent = t(goalMode === 'grid' ? 'modeHintGrid' : 'modeHintLinear');
   $('revoke-word').textContent = t('revokeWord');
   $('input-revoke').placeholder = t('revokeWord');
+  $('agree-word').textContent = t('agreeWord');
+  $('input-code').placeholder = t('agreeWord');
   applyTheme();
 }
 
@@ -1258,7 +1260,6 @@ function renderDuel() {
      ${ids.length < 2 ? `<p class="tiny muted">${t('duelWaiting')}</p>` : rows}
      ${ids.length >= 2 ? `<div class="duel-pot">${t('duelPot', fmtMoney(pot))}</div>` : ''}
      <button class="btn btn-small btn-ghost" id="btn-duel-leave">🚪 ${t('duelLeave')}</button>`;
-  if (ids.length >= 2) card.querySelector('.duel-code-badge').style.display = 'none';
   $('duel-code-badge').addEventListener('click', () => {
     navigator.clipboard && navigator.clipboard.writeText(code).then(() => toast(t('toastCopied')));
   });
@@ -1519,7 +1520,16 @@ function renderSettings() {
   $('consent-log').innerHTML = c
     ? t('consentLog', new Date(c.date).toLocaleString(lang() === 'ru' ? 'ru-RU' : 'en-US'), c.ip, c.rulesVersion)
     : t('consentNone');
+  // код дуэли всегда доступен в настройках
+  $('settings-duel-group').classList.toggle('hidden', !state.duel);
+  if (state.duel) $('settings-duel-code').textContent = state.duel.code;
 }
+
+$('settings-duel-code').addEventListener('click', () => {
+  if (state.duel && navigator.clipboard) {
+    navigator.clipboard.writeText(state.duel.code).then(() => toast(t('toastCopied')));
+  }
+});
 
 /* ---------- Навигация по табам ---------- */
 
@@ -1555,18 +1565,6 @@ $('btn-onboarding-skip').addEventListener('click', () => showScreen('signin'));
 
 /* ---------- Вход ---------- */
 
-function demoSignIn() {
-  const email = $('input-email').value.trim();
-  if (!email || !email.includes('@')) {
-    toast(t('toastEmailInvalid'), true);
-    return;
-  }
-  state.email = email;
-  save();
-  toast(t('toastDemoIn', email));
-  showScreen('consent');
-}
-
 $('btn-google-signin').addEventListener('click', async () => {
   if (!fbAuth) {
     toast(t('toastFirebaseNA'), true);
@@ -1583,19 +1581,13 @@ $('btn-google-signin').addEventListener('click', async () => {
   }
 });
 
-$('btn-demo-signin').addEventListener('click', demoSignIn);
-
 /* ---------- Согласие ---------- */
 
 $('chk-consent').addEventListener('change', (e) => {
   $('btn-consent').disabled = !e.target.checked;
 });
 
-let demoCode = '';
-
 $('btn-consent').addEventListener('click', () => {
-  demoCode = String(Math.floor(100000 + Math.random() * 900000));
-  $('demo-code').textContent = demoCode;
   $('input-code').value = '';
   $('code-error').classList.add('hidden');
   showModal('modal-confirm-consent');
@@ -1604,11 +1596,11 @@ $('btn-consent').addEventListener('click', () => {
 $('btn-code-cancel').addEventListener('click', () => showModal('modal-confirm-consent', false));
 
 $('btn-code-confirm').addEventListener('click', () => {
-  if ($('input-code').value.trim() !== demoCode) {
+  if ($('input-code').value.trim().toUpperCase() !== t('agreeWord')) {
     $('code-error').classList.remove('hidden');
     return;
   }
-  state.consent = { date: new Date().toISOString(), ip: '127.0.0.1 (демо)', rulesVersion: I18N.ru.rulesVersion };
+  state.consent = { date: new Date().toISOString(), ip: 'web-client', rulesVersion: I18N.ru.rulesVersion };
   save();
   showModal('modal-confirm-consent', false);
   toast(t('toastConsentSaved'), true);
@@ -1864,13 +1856,6 @@ document.querySelectorAll('.sound-pick').forEach((btn) =>
     if (state.sound) playCoin();
     toast(t('toastSound', state.sound));
   }));
-
-$('btn-simulate-day').addEventListener('click', () => {
-  state.dayOffset = (state.dayOffset || 0) + 1;
-  save();
-  toast(t('toastNewDay', fmtDay(dayKey(appToday()))));
-  openTab('dashboard');
-});
 
 /* ---------- Старт ---------- */
 
